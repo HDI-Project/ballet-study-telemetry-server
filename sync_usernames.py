@@ -31,7 +31,7 @@ TEST_SPREADSHEET_ID = '1D6xAA9rfng0CT_fGTVUQoSSEKwhEushtuv7dwXRM4ug'
 def log_exceptions(call):
     try:
         return call()
-    except Exception:
+    except Exception:  # pylint: disable=broad-except
         logger.exception(f'Exception in calling {call._func.__name__}')
 
 
