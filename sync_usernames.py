@@ -23,6 +23,8 @@ SCOPES = [
     'https://www.googleapis.com/auth/spreadsheets.readonly',
 ]
 SPREADSHEET_RANGE = 'L:M'
+EXPECTED_USERNAME_PROMPT = 'What is the GitHub username that will be associated with your contributions?'
+EXPECTED_OPTOUT_PROMPT = 'Check this box if you would like to opt-out of research telemetry data collection.'
 
 
 @fy.decorator
@@ -93,7 +95,11 @@ def get_username_optedin_pairs() -> Iterator[Tuple[str, str]]:
     usernames, optouts = survey_responses['values']
 
     # advance past header row!
-    optouts, usernames = optouts[1:], usernames[1:]
+    optout_header, *optouts = optouts
+    username_header, *usernames = usernames
+
+    assert optout_header == EXPECTED_OPTOUT_PROMPT, f'got {optout_header}'
+    assert username_header == EXPECTED_USERNAME_PROMPT, f'got {username_header}'
 
     for i, username in enumerate(usernames):
         optedout = len(optouts) > i and optouts[i] == 'Opt out'
