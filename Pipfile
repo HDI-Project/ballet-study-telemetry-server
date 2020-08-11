@@ -14,8 +14,10 @@ requests = "*"
 [packages]
 flask = "*"
 flask-sqlalchemy = "*"
+google-api-python-client = "*"
 gunicorn = "*"
 psycopg2 = "*"
+schedule = "*"
 sqlalchemy = "*"
 
 [requires]

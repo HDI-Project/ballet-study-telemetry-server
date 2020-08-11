@@ -18,11 +18,15 @@ def serve(c):
 @task
 def push_env(c, file='.env'):
     """Push .env key/value pairs to heroku"""
+    redlist = ('DATABASE_URL', )
     from honcho.environ import parse
     with open(file, 'r') as f:
         env = parse(f.read())
     cmd = 'heroku config:set ' + ' '.join(
-        f'{key}={value}' for key, value in env.items())
+        f'{key}=\'{value}\''
+        for key, value in env.items()
+        if key not in redlist
+    )
     c.run(cmd)
 
 
