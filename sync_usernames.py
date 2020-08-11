@@ -1,9 +1,10 @@
+import base64
 import json
 import logging.config
+import time
 from os import getenv
 
 import schedule
-import time
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
@@ -25,7 +26,9 @@ TEST_SPREADSHEET_ID = '1D6xAA9rfng0CT_fGTVUQoSSEKwhEushtuv7dwXRM4ug'
 
 
 def create_service(kind, version):
-    service_account_info = json.loads(getenv('GOOGLE_SERVICE_ACCOUNT'))
+    service_account_info = json.loads(
+        base64.b64decode(
+            getenv('GOOGLE_SERVICE_ACCOUNT')))
 
     credentials = service_account.Credentials.from_service_account_info(
         service_account_info,
