@@ -12,12 +12,11 @@ def create_app(testing=False):
     # create tables
     from bsts.db import db
     db.init_app(app)
-    with app.app_context():
-        try:
-            db.create_all()
-            app.logger.info('db.create_all: created tables')
-        except OperationalError:
-            app.logger.info('db.create_all: did NOT create tables, they probably exist already')
+    try:
+        db.create_all(app=app)
+        app.logger.info('db.create_all: created tables')
+    except OperationalError:
+        app.logger.info('db.create_all: did NOT create tables, they probably exist already')
 
     # add generic status page
     @app.route('/status')
@@ -28,6 +27,6 @@ def create_app(testing=False):
     from bsts.api import api
     app.register_blueprint(api, url_prefix='/api/v1')
 
-    app.logger.info('Logging is working for app')
+    app.logger.info(f'Logging from app {app.name}')
 
     return app

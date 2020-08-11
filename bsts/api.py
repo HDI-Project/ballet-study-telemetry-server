@@ -1,5 +1,4 @@
 from flask import Blueprint, request
-from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from bsts.db import db, Participant, Event
 
 api = Blueprint('main', __name__)
@@ -8,16 +7,12 @@ api = Blueprint('main', __name__)
 @api.route('/optedin', methods=['GET'])
 def optedin():
     github_sha1 = request.args['id']
-    try:
-        participant = (
-            db.session
-            .query(Participant)
-            .filter_by(github_sha1=github_sha1)
-            .one()
-        )
-        return participant.status
-    except (NoResultFound, MultipleResultsFound):
-        return 'unknown'
+    participant = (
+        db.session
+        .query(Participant)
+        .get(github_sha1)
+    )
+    return participant.status if participant is not None else 'unknown'
 
 
 @api.route('/events', methods=['POST'])

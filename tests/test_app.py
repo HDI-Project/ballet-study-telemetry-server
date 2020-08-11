@@ -1,14 +1,10 @@
 import datetime
-import hashlib
 import uuid
 
 from bsts.db import Event
+from bsts.util import sha1
 
 API_PREFIX = '/api/v1'
-
-
-def sha1(s):
-    return hashlib.sha1(s.encode('utf-8')).hexdigest()
 
 
 def test_status(client):

@@ -6,8 +6,7 @@ db = SQLAlchemy()
 class Participant(db.Model):
     __tablename__ = 'participants'
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    github_sha1 = db.Column(db.String(40), nullable=False)
+    github_sha1 = db.Column(db.String(40), primary_key=True, nullable=False)
     status = db.Column(db.String(3), nullable=False)
 
 
