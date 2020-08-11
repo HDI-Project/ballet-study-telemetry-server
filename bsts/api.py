@@ -12,7 +12,14 @@ def optedin():
         .query(Participant)
         .get(github_sha1)
     )
-    return participant.status if participant is not None else 'unknown'
+
+    if participant is not None:
+        if participant.optedin:
+            return 'yes'
+        else:
+            return 'no'
+    else:
+        return 'unknown'
 
 
 @api.route('/events', methods=['POST'])

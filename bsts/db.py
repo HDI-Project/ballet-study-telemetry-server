@@ -7,7 +7,7 @@ class Participant(db.Model):
     __tablename__ = 'participants'
 
     github_sha1 = db.Column(db.String(40), primary_key=True, nullable=False)
-    status = db.Column(db.String(3), nullable=False)
+    optedin = db.Column(db.Boolean(), nullable=False)
 
 
 class Event(db.Model):

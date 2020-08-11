@@ -92,7 +92,7 @@ def get_survey_responses(sheets, testing=False) -> dict:
     return response
 
 
-def get_username_status_pairs() -> Iterator[Tuple[str, str]]:
+def get_username_optedin_pairs() -> Iterator[Tuple[str, str]]:
     sheets = create_sheets_service()
     survey_responses = get_survey_responses(sheets)
     optouts, usernames = survey_responses['values']
@@ -101,24 +101,19 @@ def get_username_status_pairs() -> Iterator[Tuple[str, str]]:
     optouts, usernames = optouts[1:], usernames[1:]
 
     for i, username in enumerate(usernames):
-        if len(optouts) > i:
-            optout = optouts[i]
-            status = 'no' if optout == 'Opt out' else 'yes'
-        else:
-            status = 'unknown'
-
+        optedout = len(optouts) > i and optouts[i] == 'Opt out'
+        optedin = not optedout
         github_sha1 = sha1(username)
-
-        yield github_sha1, status
+        yield github_sha1, optedin
 
 
 @log_exceptions
 def sync_usernames() -> int:
     participants = []
-    for github_sha1, status in get_username_status_pairs():
+    for github_sha1, optedin in get_username_optedin_pairs():
         if Participant.query.get(github_sha1) is None:
             participants.append(
-                Participant(github_sha1=github_sha1, status=status))
+                Participant(github_sha1=github_sha1, optedin=optedin))
 
     db.session.add_all(participants)
     db.session.commit()
