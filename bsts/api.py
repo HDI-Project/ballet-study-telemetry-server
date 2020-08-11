@@ -18,9 +18,9 @@ def optedin():
 @api.route('/events', methods=['POST'])
 def events():
     body = request.get_json(force=True)
-    events = []
+    _events = []
     for element in body:
-        events.append(Event(
+        _events.append(Event(
             id=element['id'],
             host_sha1=element['host'],
             github_sha1=element['gh'],
@@ -28,6 +28,6 @@ def events():
             dt=element['dt'],
             details=element['details'],
         ))
-    db.session.add_all(events)
+    db.session.add_all(_events)
     db.session.commit()
-    return str(len(events))
+    return str(len(_events))
