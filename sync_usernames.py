@@ -25,6 +25,14 @@ SPREADSHEET_RANGE = 'I:J'
 TEST_SPREADSHEET_ID = '1D6xAA9rfng0CT_fGTVUQoSSEKwhEushtuv7dwXRM4ug'
 
 
+def encode_service_account_info_file(path):
+    # encode using json and b64 (to not worry about ctrl chars)
+    # then dump to .env if you want
+    with open(path, 'r') as f:
+        info = json.load(f)
+    return base64.b64encode(json.dumps(info).encode('utf-8'))
+
+
 def create_service(kind, version):
     service_account_info = json.loads(
         base64.b64decode(
