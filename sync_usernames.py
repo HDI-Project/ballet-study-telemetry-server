@@ -22,9 +22,7 @@ SCOPES = [
     'https://www.googleapis.com/auth/drive.readonly',
     'https://www.googleapis.com/auth/spreadsheets.readonly',
 ]
-SPREADSHEET_ID = '1ReiSCrUU1C4z5K0m1GzsuP_xKNT0Xv2Ck-iPsc8QW9A'
-SPREADSHEET_RANGE = 'I:J'
-TEST_SPREADSHEET_ID = '1D6xAA9rfng0CT_fGTVUQoSSEKwhEushtuv7dwXRM4ug'
+SPREADSHEET_RANGE = 'L:M'
 
 
 @fy.decorator
@@ -64,18 +62,15 @@ def create_sheets_service() -> Resource:
     return create_service('sheets', 'v4')
 
 
-def get_survey_responses(sheets, testing=False) -> dict:
+def get_survey_responses(sheets) -> dict:
     """Get optout survey responses (i.e. columns I and J)
 
     Returns:
         dict with keys range (str), majorDimension (str), and values
             List[List[str]]
     """
-    spreadsheet_id = SPREADSHEET_ID
+    spreadsheet_id = getenv('SPREADSHEET_ID')
     # sheet_id = '1063227223'  # does not appear to be needed
-
-    if testing:
-        spreadsheet_id = TEST_SPREADSHEET_ID
 
     range_ = SPREADSHEET_RANGE
     major_dimension = 'COLUMNS'
@@ -95,7 +90,7 @@ def get_survey_responses(sheets, testing=False) -> dict:
 def get_username_optedin_pairs() -> Iterator[Tuple[str, str]]:
     sheets = create_sheets_service()
     survey_responses = get_survey_responses(sheets)
-    optouts, usernames = survey_responses['values']
+    usernames, optouts = survey_responses['values']
 
     # advance past header row!
     optouts, usernames = optouts[1:], usernames[1:]
