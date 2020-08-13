@@ -19,7 +19,7 @@ def serve(c):
 @task
 def push_env(c, file='.env'):
     """Push .env key/value pairs to heroku"""
-    redlist = ('DATABASE_URL', )
+    redlist = ('DATABASE_URL', 'ENVIRONMENT')
     from honcho.environ import parse
     with open(file, 'r') as f:
         env = parse(f.read())
