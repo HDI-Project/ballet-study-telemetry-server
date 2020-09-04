@@ -116,9 +116,16 @@ def sync_usernames() -> int:
             participants.append(
                 Participant(github_sha1=github_sha1, optedin=optedin))
 
-    db.session.add_all(participants)
-    db.session.commit()
-
+    try:
+        db.session.add_all(participants)
+        db.session.commit()
+    except:  # noqa
+        db.session.rollback()
+    finally:
+        # is this necessary to fix error:
+        # > InvalidRequestError: Can't reconnect until invalid transaction is rolled back
+        # or does adding the rollback fix?
+        db.session.remove()
     n = len(participants)
     logger.info(f'Synced {n} participants')
     return n
