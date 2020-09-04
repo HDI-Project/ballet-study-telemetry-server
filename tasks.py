@@ -8,7 +8,7 @@ def test(c):
 
 @task
 def lint(c):
-    c.run('flake8 bsts tests')
+    c.run('flake8 bsts tests sync_usernames.py')
 
 
 @task
