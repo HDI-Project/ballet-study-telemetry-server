@@ -32,9 +32,4 @@ def create_app(testing=False):
     from bsts.sentry import init_sentry
     init_sentry()
 
-    # add route that creates error
-    @app.route('/debug-sentry')
-    def trigger_error():
-        division_by_zero = 1 / 0
-
     return app
